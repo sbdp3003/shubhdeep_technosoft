@@ -1,0 +1,133 @@
+/* ============================================================
+   DASHBOARD — shared layout for admin-dashboard.html & employee-dashboard.html
+   Reuses design tokens from style.css
+   ============================================================ */
+
+.dash-body{background:var(--bg-soft); min-height:100vh;}
+
+.dash-shell{display:flex; min-height:100vh;}
+
+/* ---------- Sidebar ---------- */
+.dash-sidebar{
+  width:260px; flex-shrink:0; background:var(--secondary); color:#CBD5E1;
+  position:fixed; top:0; left:0; bottom:0; z-index:40; overflow-y:auto;
+  transform:translateX(-100%); transition:transform .3s var(--ease);
+}
+.dash-sidebar.open{transform:translateX(0);}
+@media (min-width:1024px){ .dash-sidebar{transform:translateX(0);} }
+
+.dash-sidebar-head{display:flex; align-items:center; gap:10px; padding:24px; border-bottom:1px solid rgba(255,255,255,.1);}
+.dash-sidebar-head .logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--primary),var(--accent)); flex-shrink:0;}
+.dash-sidebar-head b{display:block; color:#fff; font-family:var(--font-display); font-size:.92rem;}
+.dash-sidebar-head span{display:block; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:#64748B;}
+
+.dash-nav{padding:16px 12px; display:flex; flex-direction:column; gap:3px;}
+.dash-nav a, .dash-nav button{
+  display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:10px; font-size:.88rem; font-weight:500;
+  color:#94A3B8; background:none; border:none; text-align:left; cursor:pointer; width:100%; transition:.2s;
+}
+.dash-nav a:hover, .dash-nav button:hover{background:rgba(255,255,255,.06); color:#fff;}
+.dash-nav a.active{background:var(--primary); color:#fff;}
+.dash-nav .icon{width:18px; text-align:center; flex-shrink:0;}
+
+.dash-sidebar-foot{padding:16px; border-top:1px solid rgba(255,255,255,.1); margin-top:auto;}
+.dash-logout-btn{color:#F87171 !important;}
+
+/* ---------- Main area ---------- */
+.dash-main{flex:1; min-width:0;}
+@media (min-width:1024px){ .dash-main{margin-left:260px;} }
+
+.dash-topbar{
+  position:sticky; top:0; z-index:30; background:var(--bg); border-bottom:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between; padding:14px 24px;
+}
+.dash-menu-btn{display:flex; width:38px; height:38px; border-radius:10px; border:1px solid var(--line); align-items:center; justify-content:center; background:var(--bg);}
+@media (min-width:1024px){ .dash-menu-btn{display:none;} }
+.dash-topbar-user{display:flex; align-items:center; gap:10px;}
+.dash-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:.85rem;}
+.dash-role-badge{font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:4px 10px; border-radius:100px; background:var(--primary-100); color:var(--primary-600);}
+html.dark .dash-role-badge{background:rgba(37,99,235,.18); color:#93C5FD;}
+
+.dash-content{padding:28px 24px; max-width:1280px;}
+.dash-title{font-size:1.6rem; margin-bottom:4px;}
+.dash-subtitle{color:var(--text-mute); font-size:.92rem; margin-bottom:28px;}
+
+.dash-backdrop{position:fixed; inset:0; background:rgba(15,23,42,.5); z-index:35; display:none;}
+.dash-backdrop.show{display:block;}
+
+/* ---------- Cards / grid ---------- */
+.stat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px;}
+@media (max-width:900px){ .stat-grid{grid-template-columns:repeat(2,1fr);} }
+.stat-card{background:var(--bg); border:1px solid var(--line); border-radius:var(--radius-md); padding:18px; display:flex; align-items:center; gap:14px;}
+.stat-card .si{width:44px;height:44px;border-radius:12px;background:var(--primary-100);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:19px; flex-shrink:0;}
+html.dark .stat-card .si{background:rgba(37,99,235,.18);}
+.stat-card b{display:block; font-family:var(--font-display); font-size:1.5rem;}
+.stat-card span{font-size:.76rem; color:var(--text-faint);}
+
+.dash-card{background:var(--bg); border:1px solid var(--line); border-radius:var(--radius-md); padding:22px; margin-bottom:20px;}
+.dash-card h3{font-size:1.02rem; margin-bottom:16px;}
+.dash-card-head{display:flex; align-items:center; justify-content:between; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;}
+
+.dash-grid-2{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+@media (max-width:900px){ .dash-grid-2{grid-template-columns:1fr;} }
+
+/* ---------- Table ---------- */
+.dash-table-wrap{overflow-x:auto;}
+table.dash-table{width:100%; border-collapse:collapse; font-size:.86rem;}
+table.dash-table th{text-align:left; padding:10px 14px; color:var(--text-faint); font-weight:600; border-bottom:1px solid var(--line); white-space:nowrap;}
+table.dash-table td{padding:12px 14px; border-bottom:1px solid var(--line); vertical-align:middle;}
+table.dash-table tr:last-child td{border-bottom:none;}
+table.dash-table tr:hover td{background:var(--bg-soft);}
+
+/* ---------- Badge ---------- */
+.badge{display:inline-block; padding:4px 11px; border-radius:100px; font-size:.72rem; font-weight:700; text-transform:capitalize;}
+.badge-pending{background:#F1F5F9; color:#475569;}
+.badge-in-progress{background:#FEF3C7; color:#B45309;}
+.badge-completed{background:#D1FAE5; color:#047857;}
+.badge-present{background:#D1FAE5; color:#047857;}
+.badge-absent{background:#FEE2E2; color:#B91C1C;}
+.badge-half-day{background:#FEF3C7; color:#B45309;}
+.badge-leave{background:#E0E7FF; color:#4338CA;}
+.badge-unmarked{background:#F1F5F9; color:#94A3B8;}
+.badge-low{background:#F1F5F9; color:#475569;}
+.badge-medium{background:#DBEAFE; color:#1D4ED8;}
+.badge-high{background:#FFEDD5; color:#C2410C;}
+.badge-urgent{background:#FEE2E2; color:#B91C1C;}
+html.dark .badge-pending{background:#1E293B;color:#94A3B8;}
+html.dark .badge-completed{background:rgba(16,185,129,.15); color:#34D399;}
+html.dark .badge-in-progress{background:rgba(245,158,11,.15); color:#FBBF24;}
+
+/* ---------- Form elements ---------- */
+.dform .field{margin-bottom:16px;}
+.dform label{display:block; font-size:.82rem; font-weight:600; margin-bottom:7px;}
+.dform input, .dform select, .dform textarea{
+  width:100%; padding:11px 14px; border-radius:10px; border:1.5px solid var(--line); background:var(--bg-soft); color:var(--text);
+  font-family:inherit; font-size:.88rem;
+}
+.dform input:focus, .dform select:focus, .dform textarea:focus{border-color:var(--primary); background:var(--bg); outline:none;}
+.dform-row{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+@media (max-width:560px){ .dform-row{grid-template-columns:1fr;} }
+
+/* ---------- Modal ---------- */
+.dmodal-backdrop{position:fixed; inset:0; background:rgba(15,23,42,.55); z-index:100; display:none; align-items:center; justify-content:center; padding:20px;}
+.dmodal-backdrop.show{display:flex;}
+.dmodal{background:var(--bg); border-radius:var(--radius-md); width:100%; max-width:480px; max-height:88vh; overflow-y:auto; box-shadow:var(--shadow-lg);}
+.dmodal-head{display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--line);}
+.dmodal-head h3{font-size:1.05rem;}
+.dmodal-body{padding:22px;}
+.dmodal-close{width:32px;height:32px;border-radius:50%;border:none;background:var(--bg-soft);font-size:15px;}
+
+/* ---------- Task list (employee) ---------- */
+.task-row{display:flex; align-items:center; justify-content:space-between; gap:14px; padding:16px; border:1px solid var(--line); border-radius:12px; margin-bottom:10px; flex-wrap:wrap;}
+.task-row h4{font-size:.92rem; margin-bottom:4px;}
+.task-row p{font-size:.82rem; color:var(--text-mute); margin:0;}
+.task-meta{display:flex; gap:8px; align-items:center; margin-top:6px; flex-wrap:wrap;}
+
+.progress-track{width:100%; height:8px; background:var(--line); border-radius:100px; overflow:hidden;}
+.progress-fill{height:100%; background:var(--primary); border-radius:100px; transition:width .5s var(--ease);}
+
+.empty-state{text-align:center; padding:40px 20px; color:var(--text-faint); font-size:.88rem;}
+
+.btn-xs{padding:7px 14px; font-size:.78rem; border-radius:100px;}
+.link-btn{background:none; border:none; color:var(--primary); font-weight:600; font-size:.82rem; cursor:pointer; padding:0;}
+.danger-link{color:#EF4444;}

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — Shubhdeep Technosoft</title>
+<meta name="theme-color" content="#0F172A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+<body class="dash-body">
+
+<div class="dash-backdrop" id="dashBackdrop"></div>
+
+<div class="dash-shell">
+  <!-- SIDEBAR -->
+  <aside class="dash-sidebar" id="dashSidebar">
+    <div class="dash-sidebar-head">
+      <span class="logo-mark"></span>
+      <div><b>Shubhdeep Technosoft</b><span>Admin Panel</span></div>
+    </div>
+    <nav class="dash-nav">
+      <a href="#" data-section="overview" class="active"><span class="icon">▦</span> Overview</a>
+      <a href="#" data-section="employees"><span class="icon">👤</span> Employees</a>
+      <a href="#" data-section="tasks"><span class="icon">✓</span> Tasks</a>
+      <a href="#" data-section="attendance"><span class="icon">📅</span> Attendance</a>
+      <a href="#" data-section="content"><span class="icon">🖊</span> Website Content</a>
+      <a href="index.html"><span class="icon">↩</span> Back to Website</a>
+    </nav>
+    <div class="dash-sidebar-foot">
+      <button class="dash-logout-btn" id="sidebarLogout"><span class="icon">⎋</span> Log Out</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="dash-main">
+    <header class="dash-topbar">
+      <button class="dash-menu-btn" id="dashMenuBtn" aria-label="Open menu">☰</button>
+      <div class="dash-topbar-user">
+        <span class="dash-role-badge">Admin</span>
+        <span id="topbarName" style="font-size:.88rem; font-weight:600;">...</span>
+        <div class="dash-avatar" id="topbarAvatar">?</div>
+      </div>
+    </header>
+
+    <div class="dash-content">
+
+      <!-- OVERVIEW -->
+      <section id="sec-overview">
+        <h1 class="dash-title">Welcome back, <span id="overviewName">Admin</span> 👋</h1>
+        <p class="dash-subtitle">Here's what's happening across the team today.</p>
+
+        <div class="stat-grid">
+          <div class="stat-card"><div class="si">👥</div><div><b id="statEmployees">0</b><span>Total Employees</span></div></div>
+          <div class="stat-card"><div class="si">✓</div><div><b id="statTasksToday">0</b><span>Tasks Today</span></div></div>
+          <div class="stat-card"><div class="si">🎯</div><div><b id="statCompletedToday">0</b><span>Completed Today</span></div></div>
+          <div class="stat-card"><div class="si">📅</div><div><b id="statPresentToday">0</b><span>Present Today</span></div></div>
+        </div>
+
+        <div class="dash-card">
+          <div class="dash-card-head"><h3>Today's Task Board</h3></div>
+          <div class="dash-table-wrap">
+            <table class="dash-table" id="overviewTaskTable">
+              <thead><tr><th>Task</th><th>Employee</th><th>Priority</th><th>Status</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- EMPLOYEES -->
+      <section id="sec-employees" style="display:none;">
+        <div class="dash-card-head" style="margin-bottom:20px;">
+          <div>
+            <h1 class="dash-title" style="margin-bottom:2px;">Employees</h1>
+            <p class="dash-subtitle" style="margin-bottom:0;">Manage employee profiles, attendance and workload.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" id="openAddEmployee">+ Add Employee</button>
+        </div>
+
+        <div class="dash-card">
+          <div class="dash-table-wrap">
+            <table class="dash-table" id="employeeTable">
+              <thead>
+                <tr><th>Name</th><th>Phone</th><th>Position</th><th>Today's Attendance</th><th>Today's Tasks</th><th></th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TASKS -->
+      <section id="sec-tasks" style="display:none;">
+        <div class="dash-card-head" style="margin-bottom:20px;">
+          <div>
+            <h1 class="dash-title" style="margin-bottom:2px;">Tasks</h1>
+            <p class="dash-subtitle" style="margin-bottom:0;">Assign daily goals and track task status.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" id="openAssignTask">+ Assign Task</button>
+        </div>
+
+        <div class="dash-card">
+          <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;" id="taskStatusFilters">
+            <button class="btn btn-ghost btn-xs active-filter" data-status="">All</button>
+            <button class="btn btn-ghost btn-xs" data-status="pending">Pending</button>
+            <button class="btn btn-ghost btn-xs" data-status="in-progress">In Progress</button>
+            <button class="btn btn-ghost btn-xs" data-status="completed">Completed</button>
+          </div>
+          <div class="dash-table-wrap">
+            <table class="dash-table" id="taskTable">
+              <thead><tr><th>Task</th><th>Daily Goal</th><th>Employee</th><th>Date</th><th>Priority</th><th>Status</th><th></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ATTENDANCE -->
+      <section id="sec-attendance" style="display:none;">
+        <h1 class="dash-title">Attendance</h1>
+        <p class="dash-subtitle">Mark and review daily attendance.</p>
+
+        <div class="dash-card">
+          <h3>Mark Today's Attendance</h3>
+          <div class="dash-table-wrap">
+            <table class="dash-table" id="markAttendanceTable">
+              <thead><tr><th>Employee</th><th>Position</th><th>Status</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <h3>Recent Attendance Log</h3>
+          <div class="dash-table-wrap">
+            <table class="dash-table" id="attendanceLogTable">
+              <thead><tr><th>Employee</th><th>Date</th><th>Status</th><th>Check In</th><th>Check Out</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="sec-content" style="display:none;">
+  <h1 class="dash-title">Website Content</h1>
+  <p class="dash-subtitle">Edit the text and services shown on your public website.</p>
+
+  <div style="display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;" id="contentTabs">
+    <button class="btn btn-ghost btn-xs content-tab active-filter" data-tab="hero">Hero</button>
+    <button class="btn btn-ghost btn-xs content-tab" data-tab="about">About</button>
+    <button class="btn btn-ghost btn-xs content-tab" data-tab="contact">Contact</button>
+    <button class="btn btn-ghost btn-xs content-tab" data-tab="services">Services</button>
+  </div>
+
+  <!-- HERO TAB -->
+  <div class="dash-card content-panel" id="panel-hero">
+    <h3>Hero Section</h3>
+    <form class="dform" id="heroForm">
+      <div class="field"><label>Title (before the highlighted part)</label><input type="text" id="heroTitle" placeholder="Building Digital Solutions That"></div>
+      <div class="field"><label>Highlighted Text</label><input type="text" id="heroHighlight" placeholder="Drive Business Growth"></div>
+      <div class="field"><label>Subtitle / Description</label><textarea id="heroSubtitle" rows="3"></textarea></div>
+      <div class="dform-row">
+        <div class="field"><label>Primary Button Text</label><input type="text" id="heroCtaPrimaryText" placeholder="Get Started"></div>
+        <div class="field"><label>Primary Button Link</label><input type="text" id="heroCtaPrimaryLink" placeholder="#contact"></div>
+      </div>
+      <div class="dform-row">
+        <div class="field"><label>Secondary Button Text</label><input type="text" id="heroCtaSecondaryText" placeholder="Book Consultation"></div>
+        <div class="field"><label>Secondary Button Link</label><input type="text" id="heroCtaSecondaryLink" placeholder="#estimate"></div>
+      </div>
+
+      <label style="display:block; font-size:.82rem; font-weight:600; margin:18px 0 10px;">Stats (shown under the hero text)</label>
+      <div class="dform-row"><div class="field"><label>Stat 1 Value</label><input type="text" id="heroStat0Value"></div><div class="field"><label>Stat 1 Label</label><input type="text" id="heroStat0Label"></div></div>
+      <div class="dform-row"><div class="field"><label>Stat 2 Value</label><input type="text" id="heroStat1Value"></div><div class="field"><label>Stat 2 Label</label><input type="text" id="heroStat1Label"></div></div>
+      <div class="dform-row"><div class="field"><label>Stat 3 Value</label><input type="text" id="heroStat2Value"></div><div class="field"><label>Stat 3 Label</label><input type="text" id="heroStat2Label"></div></div>
+      <div class="dform-row"><div class="field"><label>Stat 4 Value</label><input type="text" id="heroStat3Value"></div><div class="field"><label>Stat 4 Label</label><input type="text" id="heroStat3Label"></div></div>
+
+      <div id="heroSaveMsg" style="font-size:.82rem; margin-bottom:10px; display:none;"></div>
+      <button type="submit" class="btn btn-primary">Save Hero Section</button>
+    </form>
+  </div>
+
+  <!-- ABOUT TAB -->
+  <div class="dash-card content-panel" id="panel-about" style="display:none;">
+    <h3>About Section</h3>
+    <form class="dform" id="aboutForm">
+      <div class="field"><label>Eyebrow (small label above title)</label><input type="text" id="aboutEyebrow"></div>
+      <div class="field"><label>Title</label><input type="text" id="aboutTitle"></div>
+      <div class="field"><label>Description</label><textarea id="aboutDescription" rows="3"></textarea></div>
+      <div class="dform-row"><div class="field"><label>Mission Title</label><input type="text" id="aboutMissionTitle"></div><div class="field"><label>Vision Title</label><input type="text" id="aboutVisionTitle"></div></div>
+      <div class="dform-row"><div class="field"><label>Mission Text</label><textarea id="aboutMissionText" rows="2"></textarea></div><div class="field"><label>Vision Text</label><textarea id="aboutVisionText" rows="2"></textarea></div></div>
+      <div class="field"><label>Values Title</label><input type="text" id="aboutValuesTitle"></div>
+      <div class="field"><label>Values Text</label><textarea id="aboutValuesText" rows="2"></textarea></div>
+      <div class="dform-row"><div class="field"><label>Badge Value (e.g. "9+ Years")</label><input type="text" id="aboutBadgeValue"></div><div class="field"><label>Badge Text</label><input type="text" id="aboutBadgeText"></div></div>
+
+      <div id="aboutSaveMsg" style="font-size:.82rem; margin-bottom:10px; display:none;"></div>
+      <button type="submit" class="btn btn-primary">Save About Section</button>
+    </form>
+  </div>
+
+  <!-- CONTACT TAB -->
+  <div class="dash-card content-panel" id="panel-contact" style="display:none;">
+    <h3>Contact Information</h3>
+    <form class="dform" id="contactContentForm">
+      <div class="dform-row">
+        <div class="field"><label>Phone</label><input type="text" id="contactPhone"></div>
+        <div class="field"><label>Email</label><input type="email" id="contactEmail"></div>
+      </div>
+      <div class="field"><label>Address</label><input type="text" id="contactAddress"></div>
+      <div class="dform-row">
+        <div class="field"><label>Weekday Hours</label><input type="text" id="contactHoursWeekday" placeholder="9:00 AM – 7:00 PM"></div>
+        <div class="field"><label>Saturday Hours</label><input type="text" id="contactHoursSaturday" placeholder="10:00 AM – 4:00 PM"></div>
+      </div>
+      <div class="field"><label>Sunday Hours</label><input type="text" id="contactHoursSunday" placeholder="Closed"></div>
+      <div class="dform-row">
+        <div class="field"><label>LinkedIn URL</label><input type="text" id="contactSocialLinkedin"></div>
+        <div class="field"><label>Twitter / X URL</label><input type="text" id="contactSocialTwitter"></div>
+      </div>
+      <div class="dform-row">
+        <div class="field"><label>Instagram URL</label><input type="text" id="contactSocialInstagram"></div>
+        <div class="field"><label>GitHub URL</label><input type="text" id="contactSocialGithub"></div>
+      </div>
+
+      <div id="contactSaveMsg" style="font-size:.82rem; margin-bottom:10px; display:none;"></div>
+      <button type="submit" class="btn btn-primary">Save Contact Info</button>
+    </form>
+  </div>
+
+  <!-- SERVICES TAB -->
+  <div class="dash-card content-panel" id="panel-services" style="display:none;">
+    <div class="dash-card-head">
+      <h3 style="margin-bottom:0;">Services</h3>
+      <button class="btn btn-primary btn-sm" id="openAddServiceBtn">+ Add Service</button>
+    </div>
+    <div class="dash-table-wrap">
+      <table class="dash-table" id="serviceTable">
+        <thead><tr><th>Order</th><th>Icon</th><th>Name</th><th>Description</th><th>Status</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+    </div>
+  </div>
+</div>
+
+<!-- ADD EMPLOYEE MODAL -->
+<div class="dmodal-backdrop" id="addEmployeeModal">
+  <div class="dmodal">
+    <div class="dmodal-head"><h3>Add Employee</h3><button class="dmodal-close" data-close-modal="addEmployeeModal">✕</button></div>
+    <div class="dmodal-body">
+      <form class="dform" id="addEmployeeForm">
+        <div class="field"><label>Full Name</label><input type="text" id="empName" required></div>
+        <div class="field"><label>Email</label><input type="email" id="empEmail" required></div>
+        <div class="dform-row">
+          <div class="field"><label>Phone Number</label><input type="tel" id="empPhone" placeholder="+91 98765 43210"></div>
+          <div class="field"><label>Position</label><input type="text" id="empPosition" placeholder="Developer" required></div>
+        </div>
+        <div class="field"><label>Department</label>
+          <select id="empDepartment">
+            <option>Engineering</option><option>Design</option><option>QA</option><option>DevOps</option>
+            <option>Sales</option><option>Marketing</option><option>HR</option><option>Management</option>
+          </select>
+        </div>
+        <div class="field"><label>Temporary Password</label><input type="text" id="empPassword" placeholder="Leave blank to auto-generate"></div>
+        <div id="addEmployeeError" style="color:#EF4444; font-size:.82rem; margin-bottom:10px; display:none;"></div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Add Employee</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT EMPLOYEE MODAL -->
+<div class="dmodal-backdrop" id="editEmployeeModal">
+  <div class="dmodal">
+    <div class="dmodal-head"><h3>Edit Employee</h3><button class="dmodal-close" data-close-modal="editEmployeeModal">✕</button></div>
+    <div class="dmodal-body">
+      <form class="dform" id="editEmployeeForm">
+        <input type="hidden" id="editEmployeeId">
+        <div class="field"><label>Full Name</label><input type="text" id="editEmpName" required></div>
+        <div class="field"><label>Email</label><input type="email" id="editEmpEmail" required></div>
+        <div class="dform-row">
+          <div class="field"><label>Phone Number</label><input type="tel" id="editEmpPhone" placeholder="+91 98765 43210"></div>
+          <div class="field"><label>Position</label><input type="text" id="editEmpPosition" placeholder="Developer" required></div>
+        </div>
+        <div class="field"><label>Department</label>
+          <select id="editEmpDepartment">
+            <option>Engineering</option><option>Design</option><option>QA</option><option>DevOps</option>
+            <option>Sales</option><option>Marketing</option><option>HR</option><option>Management</option>
+          </select>
+        </div>
+        <div class="field"><label>New Password</label><input type="text" id="editEmpPassword" placeholder="Leave blank to keep current password"></div>
+        <div id="editEmployeeError" style="color:#EF4444; font-size:.82rem; margin-bottom:10px; display:none;"></div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ASSIGN TASK MODAL -->
+<div class="dmodal-backdrop" id="assignTaskModal">
+  <div class="dmodal">
+    <div class="dmodal-head"><h3>Assign Task</h3><button class="dmodal-close" data-close-modal="assignTaskModal">✕</button></div>
+    <div class="dmodal-body">
+      <form class="dform" id="assignTaskForm">
+        <div class="field"><label>Task Title</label><input type="text" id="taskTitle" required></div>
+        <div class="field"><label>Daily Goal</label><input type="text" id="taskGoal" placeholder="What does 'done' look like today?"></div>
+        <div class="field"><label>Description</label><textarea id="taskDescription" rows="3"></textarea></div>
+        <div class="field"><label>Assign To</label>
+          <select id="taskAssignedTo" required><option value="">Select employee</option></select>
+        </div>
+        <div class="dform-row">
+          <div class="field"><label>Date</label><input type="date" id="taskDate"></div>
+          <div class="field"><label>Priority</label>
+            <select id="taskPriority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option><option value="urgent">Urgent</option></select>
+          </div>
+        </div>
+        <div id="assignTaskError" style="color:#EF4444; font-size:.82rem; margin-bottom:10px; display:none;"></div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Assign Task</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="dmodal-backdrop" id="serviceModal">
+  <div class="dmodal">
+    <div class="dmodal-head"><h3 id="serviceModalTitle">Add Service</h3><button class="dmodal-close" data-close-modal="serviceModal">✕</button></div>
+    <div class="dmodal-body">
+      <form class="dform" id="serviceForm">
+        <input type="hidden" id="serviceId">
+        <div class="dform-row">
+          <div class="field"><label>Icon (emoji or symbol)</label><input type="text" id="serviceIcon" placeholder="⚙" required></div>
+          <div class="field"><label>Display Order</label><input type="number" id="serviceOrder" value="0"></div>
+        </div>
+        <div class="field"><label>Name</label><input type="text" id="serviceName" required></div>
+        <div class="field"><label>Description</label><textarea id="serviceDesc" rows="3" required></textarea></div>
+        <div class="field"><label>Feature Tags (comma separated)</label><input type="text" id="serviceFeats" placeholder="Discovery, Scalable architecture, Ongoing iteration"></div>
+        <div class="field">
+          <label><input type="checkbox" id="serviceIsActive" checked style="width:auto; display:inline-block; margin-right:6px;"> Published (visible on the live site)</label>
+        </div>
+        <div id="serviceFormError" style="color:#EF4444; font-size:.82rem; margin-bottom:10px; display:none;"></div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Save Service</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/session.js"></script>
+<script src="assets/js/admin.js"></script>
+<script src="assets/js/content-admin.js"></script>
+<a href="#" data-section="content"><span class="icon">🖊</span> Website Content</a>
+</body>
+</html>

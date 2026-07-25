@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dashboard — Shubhdeep Technosoft</title>
+<meta name="theme-color" content="#0F172A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+<body class="dash-body">
+
+<div class="dash-backdrop" id="dashBackdrop"></div>
+
+<div class="dash-shell">
+  <!-- SIDEBAR -->
+  <aside class="dash-sidebar" id="dashSidebar">
+    <div class="dash-sidebar-head">
+      <span class="logo-mark"></span>
+      <div><b>Shubhdeep Technosoft</b><span>Employee Panel</span></div>
+    </div>
+    <nav class="dash-nav">
+      <a href="#" data-section="home" class="active"><span class="icon">🏠</span> Home</a>
+      <a href="#" data-section="tasks"><span class="icon">✓</span> My Tasks</a>
+      <a href="#" data-section="profile"><span class="icon">👤</span> My Profile &amp; Activity</a>
+      <a href="index.html"><span class="icon">↩</span> Back to Website</a>
+    </nav>
+    <div class="dash-sidebar-foot">
+      <button class="dash-logout-btn" id="sidebarLogout"><span class="icon">⎋</span> Log Out</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="dash-main">
+    <header class="dash-topbar">
+      <button class="dash-menu-btn" id="dashMenuBtn" aria-label="Open menu">☰</button>
+      <div class="dash-topbar-user">
+        <span class="dash-role-badge">Employee</span>
+        <span id="topbarName" style="font-size:.88rem; font-weight:600;">...</span>
+        <div class="dash-avatar" id="topbarAvatar">?</div>
+      </div>
+    </header>
+
+    <div class="dash-content">
+
+
+      <!-- ================= HOME (attendance + quick stats) ================= -->
+      <section id="sec-home">
+        <h1 class="dash-title">Hey <span id="homeGreetName">there</span> 👋</h1>
+        <p class="dash-subtitle" id="homeDateLabel">Loading date...</p>
+
+        <div class="stat-grid">
+          <div class="stat-card"><div class="si">✓</div><div><b id="statTasksToday">0</b><span>Tasks Today</span></div></div>
+          <div class="stat-card"><div class="si">🎯</div><div><b id="statCompletedToday">0</b><span>Completed Today</span></div></div>
+          <div class="stat-card"><div class="si">📅</div><div><b id="statAttendanceStatus">—</b><span>Today's Attendance</span></div></div>
+          <div class="stat-card"><div class="si">📈</div><div><b id="statMonthRate">0%</b><span>This Month Present</span></div></div>
+        </div>
+
+        <!-- Attendance widget -->
+        <div class="dash-card" style="text-align:center; padding:32px 24px;">
+          <div style="font-family:var(--font-mono); font-size:.8rem; color:var(--text-faint); letter-spacing:.05em; margin-bottom:6px;" id="liveClockDate">--</div>
+          <div style="font-family:var(--font-display); font-size:2.6rem; font-weight:700; margin-bottom:20px;" id="liveClock">--:--:--</div>
+
+          <div id="attendanceStateWrap" style="display:flex; justify-content:center; gap:40px; flex-wrap:wrap; margin-bottom:22px;">
+            <div>
+              <div style="font-size:.76rem; color:var(--text-faint); margin-bottom:4px;">CHECK-IN</div>
+              <div style="font-family:var(--font-display); font-size:1.3rem;" id="checkInTimeLabel">— : —</div>
+            </div>
+            <div>
+              <div style="font-size:.76rem; color:var(--text-faint); margin-bottom:4px;">CHECK-OUT</div>
+              <div style="font-family:var(--font-display); font-size:1.3rem;" id="checkOutTimeLabel">— : —</div>
+            </div>
+            <div>
+              <div style="font-size:.76rem; color:var(--text-faint); margin-bottom:4px;">HOURS TODAY</div>
+              <div style="font-family:var(--font-display); font-size:1.3rem;" id="hoursTodayLabel">—</div>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
+            <button class="btn btn-primary" id="checkInBtn" style="min-width:160px;">Check In</button>
+            <button class="btn btn-ghost" id="checkOutBtn" style="min-width:160px;" disabled>Check Out</button>
+          </div>
+          <div id="attendanceMsg" style="font-size:.82rem; margin-top:14px; display:none;"></div>
+        </div>
+
+        <div class="dash-card">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:10px;">
+            <h3 style="margin-bottom:0;">Today's Tasks Preview</h3>
+            <button class="link-btn" data-goto-section="tasks">View all →</button>
+          </div>
+          <div id="homeTaskPreview"></div>
+        </div>
+      </section>
+
+
+    <!-- ================= MY TASKS ================= -->
+      <section id="sec-tasks" style="display:none;">
+        <h1 class="dash-title">My Tasks</h1>
+        <p class="dash-subtitle" id="todayDateLabel">Loading date...</p>
+
+        <div class="dash-card">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:10px;">
+            <h3 style="margin-bottom:0;">Today's Progress</h3>
+            <strong id="progressLabel" style="font-size:.85rem; color:var(--primary);">0/0 done</strong>
+          </div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%;"></div></div>
+        </div>
+
+        <div id="todayTaskList"></div>
+      </section>
+
+      <!-- ================= PROFILE / ACTIVITY ================= -->
+      <section id="sec-profile" style="display:none;">
+        <h1 class="dash-title">My Profile &amp; Activity</h1>
+        <p class="dash-subtitle">Your details, attendance history and task performance.</p>
+
+        <div class="dash-grid-2">
+          <div class="dash-card">
+            <h3>Profile</h3>
+            <dl id="profileDetails" style="display:flex; flex-direction:column; gap:12px; font-size:.88rem;"></dl>
+          </div>
+
+          <div class="dash-card">
+            <h3>30-Day Snapshot</h3>
+            <div class="stat-grid" style="grid-template-columns:1fr 1fr; margin-bottom:0;">
+              <div class="stat-card"><div class="si">✓</div><div><b id="snapCompleted">0</b><span>Tasks Completed</span></div></div>
+              <div class="stat-card"><div class="si">📈</div><div><b id="snapRate">0%</b><span>Completion Rate</span></div></div>
+              <div class="stat-card"><div class="si">📅</div><div><b id="snapPresent">0</b><span>Days Present</span></div></div>
+              <div class="stat-card"><div class="si">🕒</div><div><b id="snapTotal">0</b><span>Total Tasks</span></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <h3>Recent Attendance</h3>
+          <div class="dash-table-wrap">
+            <table class="dash-table" id="myAttendanceTable">
+              <thead><tr><th>Date</th><th>Check-in</th><th>Check-out</th><th>Hours</th><th>Status</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <h3>Recent Task History</h3>
+          <div class="dash-table-wrap">
+            <table class="dash-table" id="myTaskHistoryTable">
+              <thead><tr><th>Task</th><th>Date</th><th>Priority</th><th>Status</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/session.js"></script>
+<script src="assets/js/employee.js"></script>
+</body>
+</html>

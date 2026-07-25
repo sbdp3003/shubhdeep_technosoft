@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register — Shubhdeep Technosoft Pvt. Ltd.</title>
+<meta name="description" content="Create your Shubhdeep Technosoft account.">
+<meta name="theme-color" content="#0F172A">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/auth.css">
+</head>
+<body class="auth-body">
+
+<div class="auth-wrap">
+
+  <!-- LEFT BRAND PANEL -->
+  <div class="auth-brand">
+    <div class="auth-brand-top">
+      <a href="index.html" class="logo">
+        <span class="logo-mark"></span>
+        <span>Shubhdeep Technosoft<small>Private Limited</small></span>
+      </a>
+    </div>
+
+    <div class="auth-brand-mid">
+      <h2>Create your account and get started.</h2>
+      <p>Join Shubhdeep Technosoft to request quotes, track project progress, and collaborate directly with our engineering team.</p>
+      <ul class="auth-points">
+        <li><i>✓</i> Free to create, no commitment</li>
+        <li><i>✓</i> Get a response within 24 hours</li>
+        <li><i>✓</i> Manage all your projects in one place</li>
+      </ul>
+    </div>
+
+    <div class="auth-brand-bottom">© 2026 Shubhdeep Technosoft Private Limited. All rights reserved.</div>
+  </div>
+
+  <!-- RIGHT FORM PANEL -->
+  <div class="auth-panel">
+    <div class="auth-panel-wrap">
+      <a href="index.html" class="icon-btn auth-back" aria-label="Back to home">←</a>
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle dark mode" style="position:absolute; top:28px; right:28px;">☾</button>
+
+      <div class="auth-card">
+        <div class="auth-card-head">
+          <h1>Create your account</h1>
+          <p>Already have an account? <a href="login.html">Log in</a></p>
+        </div>
+
+        <div class="auth-alert" id="registerAlert"></div>
+
+        <form class="auth-form" id="registerForm" novalidate>
+          <div class="field">
+            <label for="regName">Full name</label>
+            <input type="text" id="regName" placeholder="Jordan Lee" required>
+            <div class="field-error" id="regNameError"></div>
+          </div>
+
+          <div class="field">
+            <label for="regEmail">Email address</label>
+            <input type="email" id="regEmail" placeholder="jordan@company.com" required>
+            <div class="field-error" id="regEmailError"></div>
+          </div>
+
+          <div class="field">
+            <label for="regPassword">Password</label>
+            <div class="pw-field">
+              <input type="password" id="regPassword" placeholder="At least 8 characters" required>
+              <button type="button" class="pw-toggle" data-target="regPassword" aria-label="Show password">👁</button>
+            </div>
+            <div class="pw-strength" id="pwStrength"><i></i><i></i><i></i><i></i></div>
+            <div class="field-error" id="regPasswordError"></div>
+          </div>
+
+          <div class="field">
+            <label for="regPasswordConfirm">Confirm password</label>
+            <div class="pw-field">
+              <input type="password" id="regPasswordConfirm" placeholder="Re-enter your password" required>
+              <button type="button" class="pw-toggle" data-target="regPasswordConfirm" aria-label="Show password">👁</button>
+            </div>
+            <div class="field-error" id="regPasswordConfirmError"></div>
+          </div>
+
+          <div class="form-options" style="margin-bottom:22px;">
+            <label class="remember-row"><input type="checkbox" id="regTerms"> I agree to the <a href="#">Terms</a> &amp; <a href="#">Privacy Policy</a></label>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%;" id="registerSubmit">Create Account</button>
+        </form>
+
+        <div class="auth-divider">or sign up with</div>
+        <div class="social-auth">
+          <button type="button" class="btn-social">◐ Google</button>
+          <button type="button" class="btn-social">⌥ GitHub</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/auth.js"></script>
+</body>
+</html>
