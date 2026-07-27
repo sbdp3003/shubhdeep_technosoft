@@ -16,11 +16,13 @@ import attendanceRoutes from './routes/attendanceRoutes.js';
 import taskRoutes from './routes/taskRoutes.js';
 import contentRoutes from './routes/contentRoutes.js';
 import serviceRoutes from './routes/serviceRoutes.js';
+import contactRoutes from './routes/contactRoutes.js';
+
 
 const app = express();
 
 
-app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(helmet({ crossOriginResourcePolicy: false, contentSecurityPolicy: false }));
 const allowedOrigins = [
   process.env.CLIENT_URL || 'http://127.0.0.1:5500',
   'http://localhost:5500',
@@ -47,6 +49,7 @@ app.use('/api/attendance', attendanceRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/services', serviceRoutes);
+app.use('/api/contact', contactRoutes);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

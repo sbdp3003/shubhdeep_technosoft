@@ -362,14 +362,44 @@ document.getElementById('chatSend').addEventListener('click', sendChat);
 chatInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') sendChat(); });
 
 // Contact form
-document.getElementById('contactForm').addEventListener('submit', (e)=>{
+document.getElementById('contactForm').addEventListener('submit', async (e)=>{
   e.preventDefault();
   const btn = e.target.querySelector('button[type="submit"]');
   const original = btn.textContent;
-  btn.textContent = 'Message Sent ✓';
-  btn.style.background = '#10B981';
-  e.target.reset();
-  setTimeout(()=>{ btn.textContent = original; btn.style.background = ''; }, 2600);
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  try {
+    const response = await fetch(`${window.ST_API_BASE}/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fullName: document.getElementById('fname').value,
+        email: document.getElementById('femail').value,
+        phone: document.getElementById('fphone').value,
+        service: document.getElementById('fservice').value,
+        message: document.getElementById('fmsg').value
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      btn.textContent = 'Message Sent ✓';
+      btn.style.background = '#10B981';
+      e.target.reset();
+      setTimeout(()=>{ btn.textContent = original; btn.style.background = ''; btn.disabled = false; }, 2600);
+    } else {
+      btn.textContent = 'Error!';
+      btn.style.background = '#EF4444';
+      setTimeout(()=>{ btn.textContent = original; btn.style.background = ''; btn.disabled = false; }, 2600);
+    }
+  } catch (error) {
+    console.error('Contact form error:', error);
+    btn.textContent = 'Error!';
+    btn.style.background = '#EF4444';
+    setTimeout(()=>{ btn.textContent = original; btn.style.background = ''; btn.disabled = false; }, 2600);
+  }
 });
 
 // Newsletter
