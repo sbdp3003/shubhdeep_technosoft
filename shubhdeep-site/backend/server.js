@@ -27,6 +27,11 @@ const allowedOrigins = [
   process.env.CLIENT_URL || 'http://127.0.0.1:5500',
   'http://localhost:5500',
   'http://127.0.0.1:5500',
+  
+
+  'https://www.shubhdeeptechnosoft.com',
+
+  'https://shubhdeeptechnosoft.com',
 ];
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json({ limit: '1mb' }));
