@@ -1,3 +1,4 @@
+
 // /* ============================================================
 //    ADMIN DASHBOARD LOGIC
 //    ============================================================ */
@@ -16,36 +17,39 @@
 
 //   // ---------- Small API helpers with auth ----------
 //   async function apiPut(path, body) {
-//     const res = await fetch(`${window.ST_API_BASE}${path}`, { method: 'PUT', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+//     const res = await fetch(`${window.ST_API_BASE}${path}`, { method: 'PUT', credentials: 'include', headers: { 'Content-Type': 'application/json', ...window.ST.authHeaders() }, body: JSON.stringify(body) });
 //     const data = await res.json();
 //     if (!res.ok) throw new Error(data.message);
 //     return data;
 //   }
 //   async function apiPatch(path, body) {
-//     const res = await fetch(`${window.ST_API_BASE}${path}`, { method: 'PATCH', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+//     const res = await fetch(`${window.ST_API_BASE}${path}`, { method: 'PATCH', credentials: 'include', headers: { 'Content-Type': 'application/json', ...window.ST.authHeaders() }, body: JSON.stringify(body) });
 //     const data = await res.json();
 //     if (!res.ok) throw new Error(data.message);
 //     return data;
 //   }
 //   async function apiDelete(path) {
-//     const res = await fetch(`${window.ST_API_BASE}${path}`, { method: 'DELETE', credentials: 'include' });
+//     const res = await fetch(`${window.ST_API_BASE}${path}`, { method: 'DELETE', credentials: 'include', headers: { ...window.ST.authHeaders() } });
 //     const data = await res.json();
 //     if (!res.ok) throw new Error(data.message);
 //     return data;
 //   }
 
 //   // ---------- Sidebar navigation ----------
-//   const sections = ['overview', 'employees', 'tasks', 'attendance'];
+//   const sections = ['overview', 'employees', 'tasks', 'attendance', 'leads'];
 //   function showSection(name) {
 //     sections.forEach((s) => {
 //       const el = document.getElementById(`sec-${s}`);
 //       if (el) el.style.display = s === name ? '' : 'none';
 //     });
+//     const contentSec = document.getElementById('sec-content');
+//     if (contentSec) contentSec.style.display = 'none';
 //     document.querySelectorAll('.dash-nav a[data-section]').forEach((a) => a.classList.toggle('active', a.dataset.section === name));
 //     closeSidebar();
 //     if (name === 'employees') loadEmployees();
 //     if (name === 'tasks') loadTasks();
 //     if (name === 'attendance') loadAttendanceSection();
+//     if (name === 'leads') loadLeadsSection();
 //   }
 //   document.querySelectorAll('.dash-nav a[data-section]').forEach((a) => {
 //     a.addEventListener('click', (e) => { e.preventDefault(); showSection(a.dataset.section); });
@@ -125,11 +129,17 @@
 //             <td><strong>${e.name}</strong><br><span style="color:var(--text-faint); font-size:.78rem;">${e.email}</span></td>
 //             <td>${e.phone || '—'}</td>
 //             <td>${e.position || '—'}</td>
-//             <td>${badge(e.todayAttendance)}</td>
-//             <td>${e.todayTaskCompleted}/${e.todayTaskCount}</td>
 //             <td>
+//               <span class="badge ${e.isActive ? 'badge-completed' : 'badge-pending'}">${e.isActive ? 'Active' : 'Deactivated'}</span><br>
+//               ${badge(e.todayAttendance)}
+//             </td>
+//             <td>${e.todayTaskCompleted}/${e.todayTaskCount}</td>
+//             <td style="white-space:nowrap;">
 //               <button class="link-btn" data-edit-employee="${e._id}">Edit</button>
-//               <button class="link-btn danger-link" data-deactivate="${e._id}">Deactivate</button>
+//               ${e.isActive
+//                 ? `<button class="link-btn danger-link" data-deactivate="${e._id}">Deactivate</button>`
+//                 : `<button class="link-btn" data-reactivate="${e._id}">Reactivate</button>
+//                    <button class="link-btn danger-link" data-delete-employee="${e._id}">Delete</button>`}
 //             </td>
 //           </tr>`).join('')
 //         : `<tr><td colspan="6" class="empty-state">No employees yet. Click "Add Employee" to get started.</td></tr>`;
@@ -140,8 +150,23 @@
 
 //       tbody.querySelectorAll('[data-deactivate]').forEach((btn) => {
 //         btn.addEventListener('click', async () => {
-//           if (!confirm('Deactivate this employee?')) return;
+//           if (!confirm('Deactivate this employee? They will no longer be able to log in.')) return;
 //           await apiDelete(`/employees/${btn.dataset.deactivate}`);
+//           loadEmployees();
+//         });
+//       });
+
+//       tbody.querySelectorAll('[data-reactivate]').forEach((btn) => {
+//         btn.addEventListener('click', async () => {
+//           await apiPatch(`/employees/${btn.dataset.reactivate}/reactivate`, {});
+//           loadEmployees();
+//         });
+//       });
+
+//       tbody.querySelectorAll('[data-delete-employee]').forEach((btn) => {
+//         btn.addEventListener('click', async () => {
+//           if (!confirm('Permanently delete this employee? This cannot be undone and will remove all their task and attendance history.')) return;
+//           await apiDelete(`/employees/${btn.dataset.deleteEmployee}/permanent`);
 //           loadEmployees();
 //         });
 //       });
@@ -337,6 +362,77 @@
 //     } catch (e) { console.error(e); }
 //   }
 
+//   // ================= LEADS =================
+//   const followUpLabel = { active: 'Active', following: 'Following', cancelled: 'Cancelled', other: 'Other' };
+//   let leadFilterEmployeesLoaded = false;
+
+//   function truncate(text, len) {
+//     if (!text) return '—';
+//     return text.length > len ? text.slice(0, len) + '…' : text;
+//   }
+
+//   async function populateLeadEmployeeFilter() {
+//     if (leadFilterEmployeesLoaded) return;
+//     if (!employeesCache.length) await loadEmployees();
+//     const select = document.getElementById('leadFilterEmployee');
+//     select.innerHTML = '<option value="">All Employees</option>' + employeesCache.map((e) => `<option value="${e._id}">${e.name}</option>`).join('');
+//     leadFilterEmployeesLoaded = true;
+//   }
+
+//   async function loadLeadsSection() {
+//     await populateLeadEmployeeFilter();
+//     await loadLeadsList();
+//   }
+
+//   async function loadLeadsList() {
+//     const tbody = document.querySelector('#leadsTable tbody');
+//     tbody.innerHTML = `<tr><td colspan="10" class="empty-state">Loading...</td></tr>`;
+//     try {
+//       const employee = document.getElementById('leadFilterEmployee').value;
+//       const date = document.getElementById('leadFilterDate').value;
+//       const params = new URLSearchParams();
+//       if (employee) params.set('employee', employee);
+//       if (date) params.set('date', date);
+//       const query = params.toString() ? `?${params.toString()}` : '';
+
+//       const res = await apiGet(`/leads${query}`);
+//       const leads = res.data;
+//       tbody.innerHTML = leads.length
+//         ? leads.map((l) => `
+//           <tr>
+//             <td>${l.employee?.name || '—'}</td>
+//             <td>${new Date(l.date).toLocaleDateString()}</td>
+//             <td>${l.time}</td>
+//             <td>${l.customerName}</td>
+//             <td>${l.organization || '—'}</td>
+//             <td>${l.contact || '—'}</td>
+//             <td style="max-width:180px; white-space:normal;">${truncate(l.requirement, 60)}</td>
+//             <td><span class="badge badge-${l.followUp === 'cancelled' ? 'pending' : 'completed'}">${followUpLabel[l.followUp]}</span></td>
+//             <td style="max-width:220px; white-space:normal;">${truncate(l.remark, 80)}</td>
+//             <td><button class="link-btn danger-link" data-delete-lead="${l._id}">Delete</button></td>
+//           </tr>`).join('')
+//         : `<tr><td colspan="10" class="empty-state">No leads found.</td></tr>`;
+
+//       tbody.querySelectorAll('[data-delete-lead]').forEach((btn) => {
+//         btn.addEventListener('click', async () => {
+//           if (!confirm('Delete this lead?')) return;
+//           await apiDelete(`/leads/${btn.dataset.deleteLead}`);
+//           loadLeadsList();
+//         });
+//       });
+//     } catch (e) {
+//       tbody.innerHTML = `<tr><td colspan="10" class="empty-state">Could not load leads.</td></tr>`;
+//     }
+//   }
+
+//   document.getElementById('leadFilterEmployee').addEventListener('change', loadLeadsList);
+//   document.getElementById('leadFilterDate').addEventListener('change', loadLeadsList);
+//   document.getElementById('leadFilterClear').addEventListener('click', () => {
+//     document.getElementById('leadFilterEmployee').value = '';
+//     document.getElementById('leadFilterDate').value = '';
+//     loadLeadsList();
+//   });
+
 //   // ================= INIT =================
 //   (async function init() {
 //     currentUser = await guardDashboard('admin');
@@ -349,9 +445,6 @@
 //     loadOverview();
 //   })();
 // })();
-
-
-
 
 /* ============================================================
    ADMIN DASHBOARD LOGIC
@@ -785,6 +878,43 @@
     document.getElementById('leadFilterEmployee').value = '';
     document.getElementById('leadFilterDate').value = '';
     loadLeadsList();
+  });
+
+  document.getElementById('attendanceExportMonth').value = todayStr().slice(0, 7);
+
+  document.getElementById('downloadAttendanceExcel').addEventListener('click', async () => {
+    const btn = document.getElementById('downloadAttendanceExcel');
+    const month = document.getElementById('attendanceExportMonth').value;
+    if (!month) { alert('Please select a month first.'); return; }
+
+    const original = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Preparing...';
+
+    try {
+      const res = await fetch(`${window.ST_API_BASE}/attendance/export?month=${month}`, {
+        credentials: 'include',
+        headers: { ...window.ST.authHeaders() }
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.message || 'Could not generate the file.');
+      }
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `attendance-${month}.xlsx`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = original;
+    }
   });
 
   // ================= INIT =================

@@ -122,8 +122,16 @@
 
       <!-- ATTENDANCE -->
       <section id="sec-attendance" style="display:none;">
-        <h1 class="dash-title">Attendance</h1>
-        <p class="dash-subtitle">Mark and review daily attendance.</p>
+        <div class="dash-card-head" style="margin-bottom:20px;">
+          <div>
+            <h1 class="dash-title" style="margin-bottom:2px;">Attendance</h1>
+            <p class="dash-subtitle" style="margin-bottom:0;">Mark and review daily attendance.</p>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <input type="month" id="attendanceExportMonth" style="padding:8px 12px; border-radius:8px; border:1px solid var(--line); background:var(--bg-soft); font-size:.82rem;">
+            <button class="btn btn-primary btn-sm" id="downloadAttendanceExcel">⬇ Download Excel</button>
+          </div>
+        </div>
 
         <div class="dash-card">
           <h3>Mark Today's Attendance</h3>
