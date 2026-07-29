@@ -267,7 +267,6 @@
 
 
 
-
 (function () {
   const { apiGet, apiPost } = window.ST;
 
@@ -299,7 +298,7 @@
   document.querySelectorAll('.dash-nav a[data-section="content"]').forEach((a) => {
     a.addEventListener('click', (e) => {
       e.preventDefault();
-      document.querySelectorAll('#sec-overview,#sec-employees,#sec-tasks,#sec-attendance,#sec-content').forEach((sec) => {
+      document.querySelectorAll('#sec-overview,#sec-employees,#sec-tasks,#sec-attendance,#sec-leads,#sec-content').forEach((sec) => {
         if (sec) sec.style.display = sec.id === 'sec-content' ? '' : 'none';
       });
       document.querySelectorAll('.dash-nav a[data-section]').forEach((l) => l.classList.toggle('active', l === a));

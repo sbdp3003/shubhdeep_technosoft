@@ -27,6 +27,7 @@
       <a href="#" data-section="employees"><span class="icon">👤</span> Employees</a>
       <a href="#" data-section="tasks"><span class="icon">✓</span> Tasks</a>
       <a href="#" data-section="attendance"><span class="icon">📅</span> Attendance</a>
+      <a href="#" data-section="leads"><span class="icon">📋</span> Leads</a>
       <a href="#" data-section="content"><span class="icon">🖊</span> Website Content</a>
       <a href="index.html"><span class="icon">↩</span> Back to Website</a>
     </nav>
@@ -139,6 +140,33 @@
           <div class="dash-table-wrap">
             <table class="dash-table" id="attendanceLogTable">
               <thead><tr><th>Employee</th><th>Date</th><th>Status</th><th>Check In</th><th>Check Out</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- LEADS -->
+      <section id="sec-leads" style="display:none;">
+        <h1 class="dash-title">Leads</h1>
+        <p class="dash-subtitle">Customer leads logged by field employees.</p>
+
+        <div class="dash-card">
+          <div class="dform-row" style="align-items:flex-end;">
+            <div class="field"><label>Filter by Employee</label>
+              <select id="leadFilterEmployee"><option value="">All Employees</option></select>
+            </div>
+            <div class="field"><label>Filter by Date</label><input type="date" id="leadFilterDate"></div>
+            <div class="field" style="flex:0;"><button class="btn btn-ghost btn-sm" id="leadFilterClear" style="white-space:nowrap;">Clear Filters</button></div>
+          </div>
+        </div>
+
+        <div class="dash-card">
+          <div class="dash-table-wrap">
+            <table class="dash-table" id="leadsTable">
+              <thead>
+                <tr><th>Employee</th><th>Date</th><th>Time</th><th>Customer</th><th>Organization</th><th>Contact</th><th>Requirement</th><th>Follow-up</th><th>Remark</th><th></th></tr>
+              </thead>
               <tbody></tbody>
             </table>
           </div>
@@ -300,10 +328,6 @@
     </div>
   </div>
 </div>
-      </form>
-    </div>
-  </div>
-</div>
 
 <!-- ASSIGN TASK MODAL -->
 <div class="dmodal-backdrop" id="assignTaskModal">
@@ -357,6 +381,5 @@
 <script src="assets/js/session.js"></script>
 <script src="assets/js/admin.js"></script>
 <script src="assets/js/content-admin.js"></script>
-<a href="#" data-section="content"><span class="icon">🖊</span> Website Content</a>
 </body>
 </html>

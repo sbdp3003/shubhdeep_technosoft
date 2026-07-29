@@ -26,6 +26,7 @@
       <a href="#" data-section="home" class="active"><span class="icon">🏠</span> Home</a>
       <a href="#" data-section="tasks"><span class="icon">✓</span> My Tasks</a>
       <a href="#" data-section="profile"><span class="icon">👤</span> My Profile &amp; Activity</a>
+      <a href="#" data-section="leads"><span class="icon">📋</span> Leads</a>
       <a href="index.html"><span class="icon">↩</span> Back to Website</a>
     </nav>
     <div class="dash-sidebar-foot">
@@ -155,6 +156,62 @@
         </div>
       </section>
 
+      <!-- ================= LEADS (field employee lead logging) ================= -->
+      <section id="sec-leads" style="display:none;">
+        <div class="dash-card-head" style="margin-bottom:20px;">
+          <div>
+            <h1 class="dash-title" style="margin-bottom:2px;">Leads</h1>
+            <p class="dash-subtitle" style="margin-bottom:0;">Log customer visits and enquiries from the field.</p>
+          </div>
+          <button class="btn btn-primary btn-sm" id="openAddLead">+ Add Lead</button>
+        </div>
+
+        <div class="dash-card">
+          <div class="dash-table-wrap">
+            <table class="dash-table" id="myLeadsTable">
+              <thead>
+                <tr><th>Date</th><th>Time</th><th>Customer</th><th>Organization</th><th>Contact</th><th>Requirement</th><th>Follow-up</th><th>Remark</th><th></th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT LEAD MODAL -->
+<div class="dmodal-backdrop" id="leadModal">
+  <div class="dmodal">
+    <div class="dmodal-head"><h3 id="leadModalTitle">Add Lead</h3><button class="dmodal-close" data-close-modal="leadModal">✕</button></div>
+    <div class="dmodal-body">
+      <form class="dform" id="leadForm">
+        <input type="hidden" id="leadId">
+        <div class="dform-row">
+          <div class="field"><label>Date</label><input type="date" id="leadDate" required></div>
+          <div class="field"><label>Time</label><input type="time" id="leadTime" required></div>
+        </div>
+        <div class="field"><label>Customer Name</label><input type="text" id="leadCustomerName" required></div>
+        <div class="field"><label>Organization</label><input type="text" id="leadOrganization"></div>
+        <div class="dform-row">
+          <div class="field"><label>Contact</label><input type="text" id="leadContact" placeholder="Phone / email"></div>
+          <div class="field"><label>Follow-up</label>
+            <select id="leadFollowUp">
+              <option value="active">Active</option>
+              <option value="following">Following</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label>Address</label><input type="text" id="leadAddress"></div>
+        <div class="field"><label>Requirement / Enquiry</label><textarea id="leadRequirement" rows="2"></textarea></div>
+        <div class="field"><label>Remark</label><textarea id="leadRemark" rows="5" placeholder="Write your notes here — as detailed as needed."></textarea></div>
+        <div id="leadFormError" style="color:#EF4444; font-size:.82rem; margin-bottom:10px; display:none;"></div>
+        <button type="submit" class="btn btn-primary" style="width:100%;">Save Lead</button>
+      </form>
     </div>
   </div>
 </div>

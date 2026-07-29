@@ -355,8 +355,6 @@
 
 /* ============================================================
    ADMIN DASHBOARD LOGIC
-/* ============================================================
-   ADMIN DASHBOARD LOGIC
    ============================================================ */
 (function () {
   const { apiGet, apiPost, guardDashboard, logout } = window.ST;
@@ -392,17 +390,20 @@
   }
 
   // ---------- Sidebar navigation ----------
-  const sections = ['overview', 'employees', 'tasks', 'attendance'];
+  const sections = ['overview', 'employees', 'tasks', 'attendance', 'leads'];
   function showSection(name) {
     sections.forEach((s) => {
       const el = document.getElementById(`sec-${s}`);
       if (el) el.style.display = s === name ? '' : 'none';
     });
+    const contentSec = document.getElementById('sec-content');
+    if (contentSec) contentSec.style.display = 'none';
     document.querySelectorAll('.dash-nav a[data-section]').forEach((a) => a.classList.toggle('active', a.dataset.section === name));
     closeSidebar();
     if (name === 'employees') loadEmployees();
     if (name === 'tasks') loadTasks();
     if (name === 'attendance') loadAttendanceSection();
+    if (name === 'leads') loadLeadsSection();
   }
   document.querySelectorAll('.dash-nav a[data-section]').forEach((a) => {
     a.addEventListener('click', (e) => { e.preventDefault(); showSection(a.dataset.section); });
@@ -714,6 +715,77 @@
         : `<tr><td colspan="5" class="empty-state">No attendance records yet.</td></tr>`;
     } catch (e) { console.error(e); }
   }
+
+  // ================= LEADS =================
+  const followUpLabel = { active: 'Active', following: 'Following', cancelled: 'Cancelled', other: 'Other' };
+  let leadFilterEmployeesLoaded = false;
+
+  function truncate(text, len) {
+    if (!text) return '—';
+    return text.length > len ? text.slice(0, len) + '…' : text;
+  }
+
+  async function populateLeadEmployeeFilter() {
+    if (leadFilterEmployeesLoaded) return;
+    if (!employeesCache.length) await loadEmployees();
+    const select = document.getElementById('leadFilterEmployee');
+    select.innerHTML = '<option value="">All Employees</option>' + employeesCache.map((e) => `<option value="${e._id}">${e.name}</option>`).join('');
+    leadFilterEmployeesLoaded = true;
+  }
+
+  async function loadLeadsSection() {
+    await populateLeadEmployeeFilter();
+    await loadLeadsList();
+  }
+
+  async function loadLeadsList() {
+    const tbody = document.querySelector('#leadsTable tbody');
+    tbody.innerHTML = `<tr><td colspan="10" class="empty-state">Loading...</td></tr>`;
+    try {
+      const employee = document.getElementById('leadFilterEmployee').value;
+      const date = document.getElementById('leadFilterDate').value;
+      const params = new URLSearchParams();
+      if (employee) params.set('employee', employee);
+      if (date) params.set('date', date);
+      const query = params.toString() ? `?${params.toString()}` : '';
+
+      const res = await apiGet(`/leads${query}`);
+      const leads = res.data;
+      tbody.innerHTML = leads.length
+        ? leads.map((l) => `
+          <tr>
+            <td>${l.employee?.name || '—'}</td>
+            <td>${new Date(l.date).toLocaleDateString()}</td>
+            <td>${l.time}</td>
+            <td>${l.customerName}</td>
+            <td>${l.organization || '—'}</td>
+            <td>${l.contact || '—'}</td>
+            <td style="max-width:180px; white-space:normal;">${truncate(l.requirement, 60)}</td>
+            <td><span class="badge badge-${l.followUp === 'cancelled' ? 'pending' : 'completed'}">${followUpLabel[l.followUp]}</span></td>
+            <td style="max-width:220px; white-space:normal;">${truncate(l.remark, 80)}</td>
+            <td><button class="link-btn danger-link" data-delete-lead="${l._id}">Delete</button></td>
+          </tr>`).join('')
+        : `<tr><td colspan="10" class="empty-state">No leads found.</td></tr>`;
+
+      tbody.querySelectorAll('[data-delete-lead]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          if (!confirm('Delete this lead?')) return;
+          await apiDelete(`/leads/${btn.dataset.deleteLead}`);
+          loadLeadsList();
+        });
+      });
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="10" class="empty-state">Could not load leads.</td></tr>`;
+    }
+  }
+
+  document.getElementById('leadFilterEmployee').addEventListener('change', loadLeadsList);
+  document.getElementById('leadFilterDate').addEventListener('change', loadLeadsList);
+  document.getElementById('leadFilterClear').addEventListener('click', () => {
+    document.getElementById('leadFilterEmployee').value = '';
+    document.getElementById('leadFilterDate').value = '';
+    loadLeadsList();
+  });
 
   // ================= INIT =================
   (async function init() {

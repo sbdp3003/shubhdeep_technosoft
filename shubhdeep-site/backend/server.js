@@ -18,6 +18,7 @@ import contentRoutes from './routes/contentRoutes.js';
 import serviceRoutes from './routes/serviceRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
 
+import leadRoutes from './routes/leadRoutes.js';
 
 const app = express();
 
@@ -55,7 +56,7 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/contact', contactRoutes);
-
+app.use('/api/leads', leadRoutes);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const frontendPath = path.resolve(__dirname, '../frontend');
