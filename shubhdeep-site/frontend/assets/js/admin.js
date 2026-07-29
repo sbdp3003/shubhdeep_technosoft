@@ -355,6 +355,8 @@
 
 /* ============================================================
    ADMIN DASHBOARD LOGIC
+/* ============================================================
+   ADMIN DASHBOARD LOGIC
    ============================================================ */
 (function () {
   const { apiGet, apiPost, guardDashboard, logout } = window.ST;
@@ -480,11 +482,17 @@
             <td><strong>${e.name}</strong><br><span style="color:var(--text-faint); font-size:.78rem;">${e.email}</span></td>
             <td>${e.phone || '—'}</td>
             <td>${e.position || '—'}</td>
-            <td>${badge(e.todayAttendance)}</td>
-            <td>${e.todayTaskCompleted}/${e.todayTaskCount}</td>
             <td>
+              <span class="badge ${e.isActive ? 'badge-completed' : 'badge-pending'}">${e.isActive ? 'Active' : 'Deactivated'}</span><br>
+              ${badge(e.todayAttendance)}
+            </td>
+            <td>${e.todayTaskCompleted}/${e.todayTaskCount}</td>
+            <td style="white-space:nowrap;">
               <button class="link-btn" data-edit-employee="${e._id}">Edit</button>
-              <button class="link-btn danger-link" data-deactivate="${e._id}">Deactivate</button>
+              ${e.isActive
+                ? `<button class="link-btn danger-link" data-deactivate="${e._id}">Deactivate</button>`
+                : `<button class="link-btn" data-reactivate="${e._id}">Reactivate</button>
+                   <button class="link-btn danger-link" data-delete-employee="${e._id}">Delete</button>`}
             </td>
           </tr>`).join('')
         : `<tr><td colspan="6" class="empty-state">No employees yet. Click "Add Employee" to get started.</td></tr>`;
@@ -495,8 +503,23 @@
 
       tbody.querySelectorAll('[data-deactivate]').forEach((btn) => {
         btn.addEventListener('click', async () => {
-          if (!confirm('Deactivate this employee?')) return;
+          if (!confirm('Deactivate this employee? They will no longer be able to log in.')) return;
           await apiDelete(`/employees/${btn.dataset.deactivate}`);
+          loadEmployees();
+        });
+      });
+
+      tbody.querySelectorAll('[data-reactivate]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          await apiPatch(`/employees/${btn.dataset.reactivate}/reactivate`, {});
+          loadEmployees();
+        });
+      });
+
+      tbody.querySelectorAll('[data-delete-employee]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          if (!confirm('Permanently delete this employee? This cannot be undone and will remove all their task and attendance history.')) return;
+          await apiDelete(`/employees/${btn.dataset.deleteEmployee}/permanent`);
           loadEmployees();
         });
       });
